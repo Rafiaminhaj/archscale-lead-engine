@@ -35,13 +35,17 @@ class ArchSpecExtractor:
 
         # 3. Property / Scope Type
         prop_type = "Residential"
-        if any(w in lower_text for w in ["office", "shop", "commercial", "cafe", "restaurant", "store", "studio"]):
+        flat_match = re.search(r'([1-5]\s*bhk)', lower_text)
+        bhk_prefix = f"{flat_match.group(1).upper()} " if flat_match else ""
+        
+        if "penthouse" in lower_text:
+            prop_type = f"{bhk_prefix}Penthouse" if bhk_prefix else "Penthouse"
+        elif any(w in lower_text for w in ["office", "shop", "commercial", "cafe", "restaurant", "store", "studio"]):
             prop_type = "Commercial"
-        elif any(w in lower_text for w in ["villa", "bungalow", "duplex", "penthouse"]):
-            prop_type = "Luxury Villa"
-        elif any(w in lower_text for w in ["3bhk", "2bhk", "4bhk", "flat", "apartment"]):
-            flat_match = re.search(r'([1-5]\s*bhk)', lower_text)
-            prop_type = f"Apartment ({flat_match.group(1).upper()})" if flat_match else "Apartment"
+        elif any(w in lower_text for w in ["villa", "bungalow", "duplex"]):
+            prop_type = f"{bhk_prefix}Luxury Villa" if bhk_prefix else "Luxury Villa"
+        elif flat_match or "flat" in lower_text or "apartment" in lower_text:
+            prop_type = f"Apartment ({bhk_prefix.strip()})" if bhk_prefix else "Apartment"
 
         # 4. Design Style Preference
         styles = []
