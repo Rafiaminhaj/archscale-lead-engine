@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
       replyBox.style.display = 'block';
       outboundText.innerText = `"${data.lead.conversation_history[1].text}"`;
 
+      const ledText = document.getElementById('tuyaLedText');
+      const ledDot = document.getElementById('tuyaLedDot');
+      if (data.tuya_iot_event && data.lead.score >= 80) {
+        if (ledText) ledText.innerText = `💡 Tuya Studio Light: TURNED ON (#00FF00 - ${data.lead.sender_name})`;
+        if (ledDot) ledDot.style.boxShadow = "0 0 20px #00ff88, 0 0 35px #00ff88";
+      }
+
       fetchLeads();
     }
   });

@@ -14,16 +14,23 @@
       <div class="logo-badge">ARCHSCALE</div>
       <div>
         <div class="header-title">ArchSpec AutoLead Engine</div>
-        <div class="header-subtitle">Problem AS-05: AI Lead Capture & Spec Extraction Workflow</div>
+        <div class="header-subtitle">Problem AS-05: AI Lead Qualification & Tuya Studio Lighting Automation</div>
       </div>
     </div>
     
-    <button id="voiceBtn" class="voice-btn">
-      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z"></path>
-      </svg>
-      Voice Command (AS-03)
-    </button>
+    <div style="display: flex; align-items: center; gap: 15px;">
+      <div id="tuyaStatusPill" style="display: flex; align-items: center; gap: 8px; background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); padding: 8px 14px; border-radius: 20px; font-size: 0.8rem; color: #00ff88; font-weight: 600;">
+        <span style="width: 10px; height: 10px; border-radius: 50%; background: #00ff88; box-shadow: 0 0 10px #00ff88;" id="tuyaLedDot"></span>
+        <span id="tuyaLedText">💡 Tuya Studio Lighting: READY</span>
+      </div>
+
+      <button id="voiceBtn" class="voice-btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z"></path>
+        </svg>
+        Voice Command (AS-03)
+      </button>
+    </div>
   </header>
 
   <!-- Main Grid Container -->
