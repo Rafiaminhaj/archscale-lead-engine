@@ -28,30 +28,32 @@ class InboundMessageRequest(BaseModel):
     phone: str
     message: str
 
-# Seed initial realistic demo leads
-@app.on_event("startup")
+# Seed initial realistic demo leads at module load time
 def seed_demo_data():
-    demo_msgs = [
-        {
-            "sender_name": "Rohan Malhotra",
-            "phone": "+91-9876543210",
-            "message": "Hi, I have a 3BHK 1800 sq ft apartment in HSR Layout Bangalore. Looking for full luxury interior design with Italian marble. Budget around 30 Lakhs, want to start immediately within 1 month."
-        },
-        {
-            "sender_name": "Ananya Sharma",
-            "phone": "+91-9123456789",
-            "message": "Hello, need quote for 2500 sqft boutique cafe interior design in Indiranagar. Budget around 45L. Modern industrial theme."
-        },
-        {
-            "sender_name": "Vikram Patel",
-            "phone": "+91-9988776655",
-            "message": "Need interior quote."
-        }
-    ]
-    for msg in demo_msgs:
-        spec = ArchSpecExtractor.extract_spec(msg["message"])
-        score_info = LeadScorer.calculate_score(spec)
-        WhatsAppSimulator.process_inbound(msg["sender_name"], msg["phone"], msg["message"], spec, score_info)
+    if len(WhatsAppSimulator.get_all_leads()) == 0:
+        demo_msgs = [
+            {
+                "sender_name": "Rohan Malhotra",
+                "phone": "+91-9876543210",
+                "message": "Hi, I have a 3BHK 1800 sq ft apartment in HSR Layout Bangalore. Looking for full luxury interior design with Italian marble. Budget around 30 Lakhs, want to start immediately within 1 month."
+            },
+            {
+                "sender_name": "Ananya Sharma",
+                "phone": "+91-9123456789",
+                "message": "Hello, need quote for 2500 sqft boutique cafe interior design in Indiranagar. Budget around 45L. Modern industrial theme."
+            },
+            {
+                "sender_name": "Vikram Patel",
+                "phone": "+91-9988776655",
+                "message": "Need interior quote."
+            }
+        ]
+        for msg in demo_msgs:
+            spec = ArchSpecExtractor.extract_spec(msg["message"])
+            score_info = LeadScorer.calculate_score(spec)
+            WhatsAppSimulator.process_inbound(msg["sender_name"], msg["phone"], msg["message"], spec, score_info)
+
+seed_demo_data()
 
 @app.get("/", response_class=HTMLResponse)
 async def get_dashboard():
