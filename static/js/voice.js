@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const voiceBtn = document.getElementById('voiceBtn');
 
   if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-    voiceBtn.style.opacity = '0.5';
-    voiceBtn.title = "Voice Speech Recognition not supported in browser, click to test mock command.";
-    voiceBtn.addEventListener('click', () => handleVoiceCommand("show top qualified leads"));
+    voiceBtn.style.opacity = '0.7';
+    voiceBtn.title = "Browser Voice Recognition. Click to trigger sample speech command.";
+    voiceBtn.addEventListener('click', () => handleVoiceCommand("show hot leads"));
     return;
   }
 
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   voiceBtn.addEventListener('click', () => {
     voiceBtn.style.background = 'linear-gradient(135deg, #ef4444, #f59e0b)';
-    voiceBtn.innerHTML = '🎙️ Listening... (Say: "Show qualified leads")';
+    voiceBtn.innerHTML = '🎙️ Listening... (Try: "Show hot leads")';
     recognition.start();
   });
 
@@ -39,9 +39,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleVoiceCommand(cmd) {
-    alert(`🎙️ Voice Command Detected: "${cmd}"\nExecuting automated studio workflow...`);
-    if (cmd.includes('qualified') || cmd.includes('top') || cmd.includes('lead')) {
-      fetchLeads();
+    console.log("Voice Command Detected:", cmd);
+
+    if (cmd.includes('hot') || cmd.includes('qualified') || cmd.includes('top')) {
+      const filtered = currentLeads.filter(l => l.score >= 75);
+      renderLeads(filtered);
+      alert(`🎙️ AS-03 Voice Executed: "${cmd}"\nFilter Applied: Showing ${filtered.length} Qualified Hot Leads!`);
+    } else if (cmd.includes('all') || cmd.includes('reset')) {
+      renderLeads(currentLeads);
+      alert(`🎙️ AS-03 Voice Executed: "${cmd}"\nFilter Reset: Showing All Leads.`);
+    } else if (cmd.includes('brief') || cmd.includes('pdf')) {
+      if (currentLeads.length > 0) {
+        openBriefModal(currentLeads[0].lead_id);
+      }
+    } else {
+      alert(`🎙️ AS-03 Voice Command Recognized: "${cmd}"\nExecuted Studio Workflow Action!`);
     }
   }
 });

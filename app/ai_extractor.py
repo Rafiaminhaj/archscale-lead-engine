@@ -4,7 +4,7 @@ from typing import Dict, Any, List
 class ArchSpecExtractor:
     """
     Intelligent Architectural Specification & Intent Extractor.
-    Converts raw, unstructured WhatsApp/Web lead text into a machine-readable Project Brief Card.
+    Handles edge cases: typos (e.g., '2200sqft'), budget ranges ('30-35L'), mixed casing.
     """
     
     @staticmethod
@@ -12,26 +12,40 @@ class ArchSpecExtractor:
         clean_text = text.strip()
         lower_text = clean_text.lower()
         
-        # 1. Carpet Area Extraction (sqft / sq ft / sq meter)
+        # 1. Carpet Area Extraction (handles '2200sqft', '1800 sq ft', '4500sq.ft', '2500sqm')
         area_match = re.search(r'(\d+[\d,]*)\s*(sqft|sq\.?\s*ft|square\s*feet|sqm|sq\.?\s*m)', lower_text)
-        carpet_area = f"{area_match.group(1)} sq ft" if area_match else "Unspecified"
-        
-        # 2. Budget Extraction (Lakhs / Lacs / Cr / Thousand)
-        budget_match = re.search(r'(\d+[\d\.]*)\s*(lakhs?|lacs?|l|cr|crores?|k)', lower_text)
-        if budget_match:
-            val, unit = budget_match.group(1), budget_match.group(2)
-            if unit in ['l', 'lakh', 'lakhs', 'lac', 'lacs']:
-                budget = f"₹{val} Lakhs"
-            elif unit in ['cr', 'crore', 'crores']:
-                budget = f"₹{val} Crores"
-            elif unit == 'k':
-                budget = f"₹{val}K"
-            else:
-                budget = f"₹{val}"
+        if area_match:
+            carpet_area = f"{area_match.group(1)} sq ft"
         else:
-            # Fallback for plain numbers like 25L or 30Lakh
-            alt_budget = re.search(r'₹?\s*(\d+[\d\.]*)\s*(lakh|cr)?', lower_text)
-            budget = f"₹{alt_budget.group(1)} Lakhs" if alt_budget and alt_budget.group(2) else "Unspecified"
+            # Fallback for attached typos like 2200sqft or 1800sq
+            alt_area = re.search(r'(\d+[\d,]*)\s*(sqft|sq)', lower_text)
+            carpet_area = f"{alt_area.group(1)} sq ft" if alt_area else "Unspecified"
+        
+        # 2. Budget Extraction (handles ranges like '30-35 lakhs', '30 to 35L', '80L', '1.5 Cr')
+        range_match = re.search(r'(\d+[\d\.]*)\s*(?:-|to)\s*(\d+[\d\.]*)\s*(lakhs?|lacs?|l|cr|crores?|k)', lower_text)
+        if range_match:
+            v1, v2, unit = range_match.group(1), range_match.group(2), range_match.group(3)
+            if unit in ['l', 'lakh', 'lakhs', 'lac', 'lacs']:
+                budget = f"₹{v1} - ₹{v2} Lakhs"
+            elif unit in ['cr', 'crore', 'crores']:
+                budget = f"₹{v1} - ₹{v2} Crores"
+            else:
+                budget = f"₹{v1} - ₹{v2}"
+        else:
+            budget_match = re.search(r'(\d+[\d\.]*)\s*(lakhs?|lacs?|l|cr|crores?|k)', lower_text)
+            if budget_match:
+                val, unit = budget_match.group(1), budget_match.group(2)
+                if unit in ['l', 'lakh', 'lakhs', 'lac', 'lacs']:
+                    budget = f"₹{val} Lakhs"
+                elif unit in ['cr', 'crore', 'crores']:
+                    budget = f"₹{val} Crores"
+                elif unit == 'k':
+                    budget = f"₹{val}K"
+                else:
+                    budget = f"₹{val}"
+            else:
+                alt_budget = re.search(r'₹?\s*(\d+[\d\.]*)\s*(lakh|cr)?', lower_text)
+                budget = f"₹{alt_budget.group(1)} Lakhs" if alt_budget and alt_budget.group(2) else "Unspecified"
 
         # 3. Property / Scope Type
         prop_type = "Residential"
@@ -69,7 +83,7 @@ class ArchSpecExtractor:
             m_match = re.search(r'(\d+)\s*months?', lower_text)
             timeline = f"{m_match.group(1)} Months" if m_match else "3 Months"
 
-        # Check missing critical fields
+        # Missing fields
         missing = []
         if carpet_area == "Unspecified":
             missing.append("Carpet Area (sq ft)")
