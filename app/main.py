@@ -7,11 +7,12 @@ import os
 from app.ai_extractor import ArchSpecExtractor
 from app.scoring import LeadScorer
 from app.whatsapp_sim import WhatsAppSimulator
+from app.tuya_automation import TuyaSmartAutomation
 
 app = FastAPI(
-    title="ArchSpec AutoLead Engine (AS-05 + AS-03)",
-    description="Intelligent Lead Qualification & Architectural Spec Collector for ArchDesign Studios",
-    version="1.0.0"
+    title="ArchSpec AutoLead Engine (AS-05 + AS-03) + Tuya IoT",
+    description="Intelligent Lead Qualification & Architectural Spec Collector for ArchDesign Studios with Tuya IoT Cloud Automation",
+    version="1.1.0"
 )
 
 # Serve Static files
@@ -59,11 +60,21 @@ async def process_inbound_lead(req: InboundMessageRequest):
     spec = ArchSpecExtractor.extract_spec(req.message)
     score_info = LeadScorer.calculate_score(spec)
     record = WhatsAppSimulator.process_inbound(req.sender_name, req.phone, req.message, spec, score_info)
-    return JSONResponse(content={"status": "success", "lead": record})
+    tuya_alert = TuyaSmartAutomation.trigger_studio_alert(record)
+    return JSONResponse(content={"status": "success", "lead": record, "tuya_iot_event": tuya_alert})
 
 @app.get("/api/leads")
 async def get_leads():
     return JSONResponse(content={"leads": WhatsAppSimulator.get_all_leads()})
+
+@app.get("/api/tuya-status")
+async def get_tuya_status():
+    return JSONResponse(content={
+        "status": "connected",
+        "provider": "Tuya IoT Open Cloud Platform",
+        "device_id": TuyaSmartAutomation.TUYA_DEVICE_ID,
+        "mode": "Realtime Studio Lighting & HVAC Trigger"
+    })
 
 if __name__ == "__main__":
     import uvicorn
