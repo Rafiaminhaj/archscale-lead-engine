@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 .env
 .DS_Store
+make_all_repos_public.py
+set_all_public_safe.py
+

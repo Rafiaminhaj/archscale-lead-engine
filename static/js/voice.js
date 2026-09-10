@@ -41,19 +41,23 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleVoiceCommand(cmd) {
     console.log("Voice Command Detected:", cmd);
 
-    if (cmd.includes('hot') || cmd.includes('qualified') || cmd.includes('top')) {
-      const filtered = currentLeads.filter(l => l.score >= 75);
+    if (cmd.includes('hot') || cmd.includes('top')) {
+      const filtered = currentLeads.filter(l => l.score >= 80);
       renderLeads(filtered);
-      alert(`🎙️ AS-03 Voice Executed: "${cmd}"\nFilter Applied: Showing ${filtered.length} Qualified Hot Leads!`);
+      alert(`🎙️ AS-03 Voice Executed: "${cmd}"\nApplied 3-Tier Triage Filter: Displaying ${filtered.length} HOT LEADS (Score >= 80)!`);
+    } else if (cmd.includes('warm') || cmd.includes('review')) {
+      const filtered = currentLeads.filter(l => l.score >= 40 && l.score < 80);
+      renderLeads(filtered);
+      alert(`🎙️ AS-03 Voice Executed: "${cmd}"\nApplied 3-Tier Triage Filter: Displaying ${filtered.length} WARM LEADS (Human Review Queue)!`);
     } else if (cmd.includes('all') || cmd.includes('reset')) {
       renderLeads(currentLeads);
-      alert(`🎙️ AS-03 Voice Executed: "${cmd}"\nFilter Reset: Showing All Leads.`);
+      alert(`🎙️ AS-03 Voice Executed: "${cmd}"\nFilter Reset: Showing All Studio Inbound Leads.`);
     } else if (cmd.includes('brief') || cmd.includes('pdf')) {
       if (currentLeads.length > 0) {
         openBriefModal(currentLeads[0].lead_id);
       }
     } else {
-      alert(`🎙️ AS-03 Voice Command Recognized: "${cmd}"\nExecuted Studio Workflow Action!`);
+      alert(`🎙️ AS-03 Voice Command Recognized: "${cmd}"\nExecuting Studio Workflow Action!`);
     }
   }
 });

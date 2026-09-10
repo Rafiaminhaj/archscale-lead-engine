@@ -2,8 +2,11 @@ from typing import Dict, Any
 
 class LeadScorer:
     """
-    Lead Intent & Qualification Scoring Engine.
-    Provides a transparent scoring breakdown for judges (Budget 25%, Area 20%, Scope 15%, Timeline 15%, Base 20%).
+    3-Tier Automated Triage Lead Intent Scoring Engine.
+    Scoring Rubric: Budget (25) > Area (20) > Scope (15) > Timeline (10-15) > Base (20).
+    - Hot (>=80): Instant Architect Dispatch
+    - Warm (40-79): Studio Human Review Queue
+    - Cold (<40): Nurture Drip Campaign
     """
     
     @staticmethod
@@ -49,23 +52,27 @@ class LeadScorer:
 
         final_score = min(score, 98)
 
-        if final_score >= 75:
+        # 3-Tier Automated Triage Routing
+        if final_score >= 80:
             status = "HOT LEAD (Qualified)"
             action = "Dispatch Instant WhatsApp Brief Card to Principal Architect"
             badge_color = "#10b981"
-        elif final_score >= 50:
-            status = "WARM LEAD (In Progress)"
-            action = "Trigger Auto-Drip WhatsApp Questionnaire for Missing Specs"
+        elif final_score >= 40:
+            status = "WARM LEAD (Human Review)"
+            action = "Route to Studio Human Review Queue & Send Spec Questionnaire"
             badge_color = "#f59e0b"
         else:
             status = "COLD / VAGUE"
-            action = "Add to Nurture Drip Campaign"
+            action = "Add to Automated Nurture Drip Campaign"
             badge_color = "#ef4444"
+
+        rubric_str = "Scoring Rubric: Budget (25) > Area (20) > Scope (15) > Timeline (10-15) > Base (20). Hot ≥ 80 auto-dispatches to architect."
 
         return {
             "score": final_score,
             "status": status,
             "badge_color": badge_color,
             "automated_action": action,
-            "scoring_reasons": reasons
+            "scoring_reasons": reasons,
+            "rubric": rubric_str
         }

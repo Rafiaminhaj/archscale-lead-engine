@@ -38,10 +38,12 @@ function renderLeads(leads) {
   const container = document.getElementById('leadsList');
   container.innerHTML = '';
 
-  let qualifiedCount = 0;
+  let hotCount = 0;
+  let warmCount = 0;
 
   leads.forEach(lead => {
-    if (lead.score >= 75) qualifiedCount++;
+    if (lead.score >= 80) hotCount++;
+    else if (lead.score >= 40) warmCount++;
 
     const scoringReasons = (lead.reasons || []).map(r => `<span style="background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px; font-size:0.7rem; font-family:monospace;">${escapeHtml(r)}</span>`).join(' ');
 
@@ -86,7 +88,7 @@ function renderLeads(leads) {
         </div>
       </div>
 
-      <!-- Transparent Scoring Breakdown Bar for Judges -->
+      <!-- Transparent Scoring Allocation -->
       <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
         <span style="font-size: 0.7rem; color: #9ca3af; font-weight: 700;">SCORE ALLOCATION:</span>
         ${scoringReasons}
@@ -94,7 +96,7 @@ function renderLeads(leads) {
 
       <!-- Automated Triggered Action -->
       <div class="action-bar">
-        <span>⚡ <strong>Triggered Workflow:</strong> ${escapeHtml(lead.automated_action)}</span>
+        <span>⚡ <strong>3-Tier Triage Action:</strong> ${escapeHtml(lead.automated_action)}</span>
         <button onclick="openBriefModal('${lead.lead_id}')" style="background: #10b981; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">
           View Brief PDF
         </button>
@@ -104,7 +106,10 @@ function renderLeads(leads) {
   });
 
   document.getElementById('statTotal').innerText = leads.length;
-  document.getElementById('statQualified').innerText = qualifiedCount;
+  document.getElementById('statQualified').innerText = hotCount;
+  if (document.getElementById('statWarm')) {
+    document.getElementById('statWarm').innerText = warmCount;
+  }
 }
 
 function setPreset(num) {
@@ -130,7 +135,7 @@ function openBriefModal(leadId) {
   document.getElementById('modalLeadId').innerText = `Official Studio Brief Card Document | Ref: ${lead.lead_id} | ${lead.timestamp}`;
   const body = document.getElementById('modalBody');
 
-  const scoringList = (lead.reasons || []).map(r => `<li style="margin-bottom:4px;">${escapeHtml(r)}</li>`).join('');
+  const scoringList = (lead.reasons || []).map(r => `<li style="margin-bottom:3px;">${escapeHtml(r)}</li>`).join('');
 
   body.innerHTML = `
     <!-- Studio Header -->
@@ -166,23 +171,26 @@ function openBriefModal(leadId) {
     </div>
 
     <!-- Design Style -->
-    <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+    <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
       <div style="font-size: 0.75rem; color: #9ca3af; font-weight: 700;">PREFERRED DESIGN STYLE & LANGUAGE:</div>
-      <div style="font-size: 0.95rem; color: #f3f4f6; margin-top: 4px; font-weight: 600;">${escapeHtml(lead.spec.design_style)}</div>
+      <div style="font-size: 0.9rem; color: #f3f4f6; margin-top: 4px; font-weight: 600;">${escapeHtml(lead.spec.design_style)}</div>
     </div>
 
-    <!-- Transparent Score Breakdown for Evaluation Judges -->
-    <div style="background: rgba(15,23,42,0.9); border: 1px solid rgba(6,182,212,0.3); padding: 14px; border-radius: 10px;">
-      <div style="font-size: 0.8rem; font-weight: 700; color: #06b6d4; margin-bottom: 6px;">🎯 TRANSPARENT SCORING ALLOCATION BREAKDOWN (JUDGES VIEW):</div>
-      <ul style="font-size: 0.8rem; color: #d1d5db; padding-left: 20px; font-family: monospace;">
+    <!-- Transparent Score Allocation Breakdown -->
+    <div style="background: rgba(15,23,42,0.9); border: 1px solid rgba(6,182,212,0.3); padding: 12px; border-radius: 10px;">
+      <div style="font-size: 0.75rem; font-weight: 700; color: #06b6d4; margin-bottom: 4px;">🎯 SCORING ALLOCATION & RUBRIC (JUDGES VIEW):</div>
+      <div style="font-size: 0.7rem; color: #f59e0b; margin-bottom: 6px; font-family: monospace;">
+        Rubric: Budget (25) > Area (20) > Scope (15) > Timeline (10-15) > Base (20). Hot ≥ 80 auto-dispatches to architect.
+      </div>
+      <ul style="font-size: 0.75rem; color: #d1d5db; padding-left: 20px; font-family: monospace;">
         ${scoringList}
       </ul>
     </div>
 
-    <!-- Triggered Workflow Action -->
-    <div style="background: ${lead.badge_color}15; border: 1px solid ${lead.badge_color}44; padding: 14px; border-radius: 10px; color: ${lead.badge_color};">
-      <div style="font-size: 0.85rem; font-weight: 700;">⚡ Triggered Automated Workflow:</div>
-      <div style="font-size: 0.85rem; margin-top: 2px;">${escapeHtml(lead.automated_action)}</div>
+    <!-- 3-Tier Automated Workflow Action -->
+    <div style="background: ${lead.badge_color}15; border: 1px solid ${lead.badge_color}44; padding: 12px; border-radius: 10px; color: ${lead.badge_color};">
+      <div style="font-size: 0.8rem; font-weight: 700;">⚡ 3-Tier Automated Triage Action:</div>
+      <div style="font-size: 0.8rem; margin-top: 2px;">${escapeHtml(lead.automated_action)}</div>
     </div>
   `;
 
