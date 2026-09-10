@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArchSpec AutoLead Engine | ArchScale AS-05 Hackathon</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- Top Sticky Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-badge">ARCHSCALE</div>
+      <div>
+        <div class="header-title">ArchSpec AutoLead Engine</div>
+        <div class="header-subtitle">Problem AS-05: AI Lead Capture & Spec Extraction Workflow</div>
+      </div>
+    </div>
+    
+    <button id="voiceBtn" class="voice-btn">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 016 0v6a3 3 0 01-3 3z"></path>
+      </svg>
+      Voice Command (AS-03)
+    </button>
+  </header>
+
+  <!-- Main Grid Container -->
+  <div class="container">
+
+    <!-- Left Column: WhatsApp Simulator -->
+    <div class="phone-mockup">
+      <div class="phone-header">
+        <div class="phone-avatar">💬</div>
+        <div>
+          <div class="phone-title">Inbound WhatsApp Simulator</div>
+          <div class="phone-status">● Live Webhook Runner</div>
+        </div>
+      </div>
+
+      <form id="leadForm" class="chat-input-box">
+        <div class="form-group">
+          <label for="senderName">Client / Lead Name</label>
+          <input type="text" id="senderName" class="form-input" placeholder="e.g. Rahul Verma" required value="Siddharth Rao">
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNum">WhatsApp Phone Number</label>
+          <input type="text" id="phoneNum" class="form-input" placeholder="+91-XXXXXXXXXX" required value="+91-9876500112">
+        </div>
+
+        <div class="form-group">
+          <label for="leadMsg">Inbound Unstructured WhatsApp Message</label>
+          <textarea id="leadMsg" class="form-textarea" rows="5" placeholder="Type raw client requirement..." required>Hi! I want a modern minimalist interior design for my 3BHK penthouse 2200 sqft in Koramangala Bangalore. Budget around 35 Lakhs, ready to start in 2 months.</textarea>
+        </div>
+
+        <button type="submit" class="send-btn">🚀 Ingest Inbound Lead & Generate Brief</button>
+      </form>
+
+      <!-- Preset Sample Buttons for Quick Demo -->
+      <div style="margin-top: 20px;">
+        <div style="font-size: 0.75rem; color: #9ca3af; font-weight: 700; margin-bottom: 8px;">TRY PRESET DEMO MESSAGES:</div>
+        <div class="quick-samples">
+          <div class="sample-chip" onclick="setPreset(1)">🏡 Luxury Villa 4500 sqft (₹80L)</div>
+          <div class="sample-chip" onclick="setPreset(2)">🏢 Commercial Office 3000 sqft (₹50L)</div>
+          <div class="sample-chip" onclick="setPreset(3)">❓ Vague Inquiry ("Need interior quote")</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Studio CRM & Brief Cards -->
+    <div class="crm-section">
+
+      <!-- Stats Counters -->
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div id="statTotal" class="stat-num">0</div>
+          <div class="stat-label">Total Inbound Leads</div>
+        </div>
+        <div class="stat-card">
+          <div id="statQualified" class="stat-num" style="color: #10b981;">0</div>
+          <div class="stat-label">Hot / Qualified Briefs</div>
+        </div>
+        <div class="stat-card">
+          <div id="statTimeSaved" class="stat-num" style="color: #8b5cf6;">14.5 hrs</div>
+          <div class="stat-label">Quoting Time Saved</div>
+        </div>
+      </div>
+
+      <!-- Live Project Brief Cards Header -->
+      <div class="leads-header">
+        <span>Machine-Readable Architectural Project Brief Cards</span>
+        <span style="font-size: 0.8rem; color: #10b981; font-weight: 600;">● Auto-Workflow Active</span>
+      </div>
+
+      <!-- Container where Cards render dynamically -->
+      <div id="leadsList" style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Dynamically filled by JS -->
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/voice.js"></script>
+</body>
+</html>
