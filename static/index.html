@@ -52,13 +52,19 @@
 
         <div class="form-group">
           <label for="leadMsg">Inbound Unstructured WhatsApp Message</label>
-          <textarea id="leadMsg" class="form-textarea" rows="5" placeholder="Type raw client requirement..." required>Hi! I want a modern minimalist interior design for my 3BHK penthouse 2200 sqft in Koramangala Bangalore. Budget around 35 Lakhs, ready to start in 2 months.</textarea>
+          <textarea id="leadMsg" class="form-textarea" rows="4" placeholder="Type raw client requirement..." required>Hi! I want a modern minimalist interior design for my 3BHK penthouse 2200 sqft in Koramangala Bangalore. Budget around 35 Lakhs, ready to start in 2 months.</textarea>
         </div>
 
         <button type="submit" class="send-btn">🚀 Ingest Inbound Lead & Generate Brief</button>
       </form>
 
-      <!-- Preset Sample Buttons for Quick Demo -->
+      <!-- Simulated Outbound WhatsApp Response Box -->
+      <div id="outboundReplyBox" style="margin-top: 15px; display: none; background: rgba(16, 185, 129, 0.1); border: 1px dashed #10b981; padding: 12px; border-radius: 10px; font-size: 0.8rem;">
+        <div style="font-weight: 700; color: #10b981; margin-bottom: 4px;">📲 Simulated Automated WhatsApp Outbound Reply:</div>
+        <div id="outboundText" style="color: #d1d5db; font-style: italic;">...</div>
+      </div>
+
+      <!-- Sample Quick Messages -->
       <div style="margin-top: 20px;">
         <div style="font-size: 0.75rem; color: #9ca3af; font-weight: 700; margin-bottom: 8px;">TRY PRESET DEMO MESSAGES:</div>
         <div class="quick-samples">
@@ -101,6 +107,28 @@
 
     </div>
 
+  </div>
+
+  <!-- Printable Brief Card Modal -->
+  <div id="briefModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h3 style="color: #06b6d4; font-size: 1.1rem;">🏛️ ARCHITECTURAL PROJECT BRIEF CARD</h3>
+          <p id="modalLeadId" style="font-size: 0.8rem; color: #9ca3af;">Lead ID: LEAD-100</p>
+        </div>
+        <button class="close-btn" onclick="closeModal()">×</button>
+      </div>
+      
+      <div id="modalBody" style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+        <!-- Brief Card Details Rendered Here -->
+      </div>
+
+      <div class="modal-footer">
+        <button onclick="window.print()" class="print-btn">🖨️ Print / Download Brief PDF</button>
+        <button onclick="closeModal()" class="btn-secondary">Close</button>
+      </div>
+    </div>
   </div>
 
   <script src="/static/js/app.js"></script>

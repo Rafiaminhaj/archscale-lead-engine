@@ -1,3 +1,5 @@
+let currentLeads = [];
+
 document.addEventListener('DOMContentLoaded', () => {
   fetchLeads();
 
@@ -15,8 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const data = await res.json();
     if (data.status === 'success') {
+      // Show simulated outbound WhatsApp response box
+      const replyBox = document.getElementById('outboundReplyBox');
+      const outboundText = document.getElementById('outboundText');
+      replyBox.style.display = 'block';
+      outboundText.innerText = `"${data.lead.conversation_history[1].text}"`;
+
       fetchLeads();
-      alert(`✅ Lead Processed & Project Brief Card Generated! Intent Score: ${data.lead.score}/100`);
     }
   });
 });
@@ -24,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
 async function fetchLeads() {
   const res = await fetch('/api/leads');
   const data = await res.json();
-  renderLeads(data.leads || []);
+  currentLeads = data.leads || [];
+  renderLeads(currentLeads);
 }
 
 function renderLeads(leads) {
@@ -80,7 +88,7 @@ function renderLeads(leads) {
       <!-- Automated Triggered Action -->
       <div class="action-bar">
         <span>⚡ <strong>Triggered Workflow:</strong> ${escapeHtml(lead.automated_action)}</span>
-        <button onclick="triggerAction('${lead.lead_id}')" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">
+        <button onclick="openBriefModal('${lead.lead_id}')" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer;">
           View Brief PDF
         </button>
       </div>
@@ -108,8 +116,54 @@ function setPreset(num) {
   }
 }
 
-function triggerAction(id) {
-  alert(`📄 Generating Machine-Readable Architectural Brief Card PDF for Lead ${id}... Ready for Principal Architect review!`);
+function openBriefModal(leadId) {
+  const lead = currentLeads.find(l => l.lead_id === leadId);
+  if (!lead) return;
+
+  document.getElementById('modalLeadId').innerText = `Machine-Readable Brief Spec | ID: ${lead.lead_id} | ${lead.timestamp}`;
+  const body = document.getElementById('modalBody');
+  
+  body.innerHTML = `
+    <div style="background: rgba(15,23,42,0.8); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+      <div style="font-size: 1.1rem; font-weight: 800; color: #f3f4f6;">Client: ${escapeHtml(lead.sender_name)}</div>
+      <div style="font-size: 0.85rem; color: #9ca3af; margin-top: 4px;">Phone: ${escapeHtml(lead.phone)}</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-family: monospace;">
+      <div style="background: rgba(6,182,212,0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(6,182,212,0.3);">
+        <div style="color: #9ca3af; font-size: 0.75rem;">PROPERTY SCOPE</div>
+        <div style="color: #06b6d4; font-weight: 700; font-size: 1rem;">${escapeHtml(lead.spec.property_type)}</div>
+      </div>
+      <div style="background: rgba(16,185,129,0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(16,185,129,0.3);">
+        <div style="color: #9ca3af; font-size: 0.75rem;">CARPET AREA</div>
+        <div style="color: #10b981; font-weight: 700; font-size: 1rem;">${escapeHtml(lead.spec.carpet_area)}</div>
+      </div>
+      <div style="background: rgba(245,158,11,0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(245,158,11,0.3);">
+        <div style="color: #9ca3af; font-size: 0.75rem;">ESTIMATED BUDGET</div>
+        <div style="color: #f59e0b; font-weight: 700; font-size: 1rem;">${escapeHtml(lead.spec.budget)}</div>
+      </div>
+      <div style="background: rgba(139,92,246,0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.3);">
+        <div style="color: #9ca3af; font-size: 0.75rem;">TIMELINE</div>
+        <div style="color: #c084fc; font-weight: 700; font-size: 1rem;">${escapeHtml(lead.spec.timeline)}</div>
+      </div>
+    </div>
+
+    <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 10px;">
+      <div style="font-size: 0.75rem; color: #9ca3af; font-weight: 700;">DESIGN STYLE PREFERENCE:</div>
+      <div style="font-size: 0.95rem; color: #f3f4f6; margin-top: 4px; font-weight: 600;">${escapeHtml(lead.spec.design_style)}</div>
+    </div>
+
+    <div style="background: ${lead.badge_color}15; border: 1px solid ${lead.badge_color}44; padding: 14px; border-radius: 10px; color: ${lead.badge_color};">
+      <div style="font-size: 0.8rem; font-weight: 700;">QUALIFICATION SCORE: ${lead.score}/100 — ${lead.status}</div>
+      <div style="font-size: 0.8rem; margin-top: 4px;">⚡ Automated Workflow: ${escapeHtml(lead.automated_action)}</div>
+    </div>
+  `;
+
+  document.getElementById('briefModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('briefModal').style.display = 'none';
 }
 
 function escapeHtml(text) {
