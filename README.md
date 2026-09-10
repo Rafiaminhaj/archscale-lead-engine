@@ -1,8 +1,73 @@
 # 🏛️ ArchSpec AutoLead Engine
-> **ArchScale Guild Intern Technology Hackathon Submission**
-> **Target Challenges:** `AS-05 — Build the marketing machine` (Primary) + `AS-03 — Voice Command Execution` (Secondary)
-> **Applicant:** Rafia Minhaj (`rafiaminhaj423@gmail.com`)
-> **Registration ID:** `REG-9FE9C39B`
+> **ArchScale Guild Intern Technology Hackathon Submission**  
+> **Target Challenges:** `AS-05 — Build the marketing machine` (Primary) + `AS-03 — Voice Command Execution` (Secondary)  
+> **Applicant:** Rafia Minhaj (`rafiaminhaj423@gmail.com`)  
+> **Registration ID:** `REG-9FE9C39B`  
+
+![ArchSpec AutoLead Engine UI Banner](assets/banner.png)
+
+---
+
+## 🏗️ System Architecture & Workflow Diagram
+
+```mermaid
+graph TD
+    A[Unstructured WhatsApp / Web Message] -->|Inbound Webhook| B[FastAPI API Gateway]
+    B --> C[ArchSpec AI Extractor Engine]
+    
+    subgraph AI Extraction Core
+        C --> D[Carpet Area Extractor sq ft]
+        C --> E[Budget Tier Classifier ₹]
+        C --> F[Timeline & Urgency Detector]
+        C --> G[Design Style Classifier]
+    end
+    
+    D --> H[Machine-Readable Project Brief Card]
+    E --> H
+    F --> H
+    G --> H
+    
+    H --> I[Lead Intent Scoring Engine 0-100]
+    
+    I -->|Score >= 75| J[🔥 HOT LEAD: Instant WhatsApp Alert to Principal Architect]
+    I -->|Score 50-74| K[⚡ WARM LEAD: Trigger Auto-Drip Spec Questionnaire]
+    I -->|Score < 50| L[💬 COLD / VAGUE: Nurture Campaign]
+    
+    M[🎙️ Web Speech API AS-03 Voice Command] -->|Voice to Action| B
+```
+
+### 🔹 High-Level Architecture Component Flow
+
+```
++-----------------------------------------------------------------------------------+
+|                            INBOUND UNSTRUCTURED CHAT                              |
+|   "Hi, 3BHK 2200 sqft penthouse in Koramangala, budget 35 Lakhs, start ASAP"      |
++-----------------------------------------+-----------------------------------------+
+                                          |
+                                          v
++-----------------------------------------------------------------------------------+
+|                        FASTAPI BACKEND & SPEC EXTRACTOR                           |
+|   • Regex & NLP Parameter Parser                                                  |
+|   • Parameter Normalization (Sq Ft, INR Lakhs/Cr, Urgency)                        |
++-----------------------------------------+-----------------------------------------+
+                                          |
+                                          v
++-----------------------------------------------------------------------------------+
+|                     MACHINE-READABLE PROJECT BRIEF CARD PDF                       |
+|   • Property Scope: Apartment (3BHK Penthouse)                                    |
+|   • Carpet Area: 2,200 sq ft                                                      |
+|   • Estimated Budget: ₹35.0 Lakhs                                                 |
+|   • Urgency: Immediate (< 1 Month)                                                |
++-----------------------------------------+-----------------------------------------+
+                                          |
+                                          v
++-----------------------------------------------------------------------------------+
+|                      AUTOMATED WORKFLOW DISPATCH (AS-05)                          |
+|   • Intent Score: 95/100 (HOT LEAD)                                               |
+|   • Action: Instant WhatsApp Brief Dispatch to Principal Architect                |
+|   • AS-03 Integration: Speech-to-Command Execution ("Show Qualified Leads")       |
++-----------------------------------------------------------------------------------+
+```
 
 ---
 
