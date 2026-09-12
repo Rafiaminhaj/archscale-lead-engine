@@ -130,8 +130,11 @@ function setPreset(num) {
     name.value = "Priya Nambiar";
     msg.value = "Need commercial interior design for 3000 sq ft IT office space in Electronic City. Budget 45-50L, modern industrial theme.";
   } else if (num === 3) {
-    name.value = "Amit Kumar";
-    msg.value = "Hi, 3bhk banglore 2200sqft interior quote.";
+    name.value = "Vikram Patel";
+    msg.value = "Need interior quote.";
+  } else if (num === 4) {
+    name.value = "Neha Gupta";
+    msg.value = "Hi, I need interior design for my 2BHK flat in Whitefield Bangalore. Budget around 20 lakhs, not sure about the exact area yet.";
   }
 }
 

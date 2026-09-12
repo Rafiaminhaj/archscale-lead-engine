@@ -46,6 +46,11 @@ def seed_demo_data():
                 "sender_name": "Vikram Patel",
                 "phone": "+91-9988776655",
                 "message": "Need interior quote."
+            },
+            {
+                "sender_name": "Neha Gupta",
+                "phone": "+91-9876500112",
+                "message": "Hi, I need interior design for my 2BHK flat in Whitefield Bangalore. Budget around 20 lakhs, not sure about the exact area yet."
             }
         ]
         for msg in demo_msgs:
