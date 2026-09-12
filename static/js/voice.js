@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (cmd.includes('hot') || cmd.includes('top') || cmd.includes('high')) {
+    if (cmd.includes('hot') || cmd.includes('top') || cmd.includes('high') || cmd.includes('hello') || cmd.includes('hi')) {
       const filtered = currentLeads.filter(l => l.score >= 80);
       renderLeads(filtered);
       showVoiceToast(`🎙️ AS-03 Voice Executed: "${cmd}"\nApplied Filter: Displaying ${filtered.length} HOT LEADS (Score >= 80)!`);
