@@ -6,6 +6,9 @@
 
 ![ArchSpec AutoLead Engine UI Banner](assets/banner.png)
 
+> 🎥 **Live Video Demonstration & Walkthrough:**  
+> 👉 [Watch ArchSpec AutoLead Engine Video Walkthrough (Google Drive)](https://drive.google.com/file/d/1I8HT0hnHkU3jeGkAkLI5BfdWAtIcSgzn/view?usp=sharing)
+
 ---
 
 ## 🎯 1. 3-Tier Automated Triage & Scoring Rubric
